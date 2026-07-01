@@ -32,7 +32,7 @@ export const Team: React.FC = () => {
           Our Team
         </h2>
         <p className="text-3xl md:text-5xl font-extrabold text-white font-heading leading-tight">
-          STEM Experts & Engineers
+          The Minds Behind i3 Labs
         </p>
         <div className="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
       </div>

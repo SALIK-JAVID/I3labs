@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: #050c18;
+  color: #cbd5e1;
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: #050c18; }
+::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 2px; }
+
+/* ── Ambient orb pulse ──────────────────────────────── */
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%       { opacity: 0.5;  transform: scale(1.1); }
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: orb-pulse 7s ease-in-out infinite;
+}
+
+.ambient-orb-slow {
+  animation: orb-pulse 11s ease-in-out infinite;
+}
+
+/* ── Card hover glow ────────────────────────────────── */
+.card-glow {
+  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 8px 48px rgba(59, 130, 246, 0.12), 0 2px 16px rgba(0, 0, 0, 0.5);
+  border-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+/* ── Shimmer underline on section labels ────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}

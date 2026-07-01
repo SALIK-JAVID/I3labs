@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState, type ComponentType, type CSSProperties } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 import { Bot, Code2, Award, Lightbulb, Wifi, Cpu, ChevronDown, Menu, X } from 'lucide-react';
+import { I3Mark }     from './components/Logo';
 import { About }      from './sections/About';
 import { Services }   from './sections/Services';
 import { Benefits }   from './sections/Benefits';
 import { Curriculum } from './sections/Curriculum';
+import { VideoTour }  from './sections/VideoTour';
 import { WhyPartner } from './sections/WhyPartner';
 import { ThreeIPP }   from './sections/ThreeIPP';
 import { Engagement } from './sections/Engagement';
@@ -15,10 +19,10 @@ import { Team }       from './sections/Team';
 import { Contact }    from './sections/Contact';
 
 const BG_VIDEO =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4';
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4';
 
 const navLinks = [
-  'Home', 'About', 'Services', 'Curriculum',
+  'Home', 'About', 'Services', 'Curriculum', 'Video Tour',
   'Programs', 'Why Us', 'Clients', 'Team', 'Contact',
 ];
 
@@ -56,13 +60,28 @@ const stats: StatDef[] = [
   { label: 'Patents',      from: 0,    to: 20,   format: v => Math.round(v) + '+'   },
 ];
 
-const Logo = () => (
-  <svg width="15" height="15" viewBox="0 0 256 256" fill="none">
-    <path
-      fill="rgb(84, 84, 84)"
-      d="M 160 88 L 194 34 L 216 0 L 256 0 L 256 40 L 221.5 93.5 L 200 128 L 256 128 L 256 256 L 96 256 L 96 168 L 64.246 220 L 40 256 L 0 256 L 0 216 L 34 162 L 56 128 L 0 128 L 0 0 L 160 0 Z"
-    />
-  </svg>
+/** Animated brand lockup: circular i3 mark that spins its ring on hover + wordmark. */
+const Brand = () => (
+  <motion.div
+    className="flex items-center gap-2.5 cursor-pointer group"
+    whileHover="hover"
+    initial="rest"
+    animate="rest"
+  >
+    <motion.div
+      variants={{ rest: { rotate: 0 }, hover: { rotate: 360 } }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      className="shrink-0"
+    >
+      <I3Mark size={30} className="text-white drop-shadow-[0_0_6px_rgba(59,130,246,0.35)]" />
+    </motion.div>
+    <div>
+      <p className="text-[12px] font-semibold text-slate-100 leading-none">i3 Labs</p>
+      <p className="text-[8px] font-medium text-slate-400 tracking-wider uppercase leading-none mt-[3px]">
+        Innovations Unleashed
+      </p>
+    </div>
+  </motion.div>
 );
 
 export default function App() {
@@ -114,15 +133,18 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ display: 'contents' }}>
-    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: '#f0f0ee' }}>
+    <div className="relative w-full min-h-screen text-slate-100 overflow-x-hidden" style={{ backgroundColor: '#050c18' }}>
 
-      {/* Background video */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay muted loop playsInline
-        src={BG_VIDEO}
-      />
+      <div className="relative z-10 w-full">
+        {/* ── Hero section ──────────────────────────────────────────────────── */}
+        <div className="relative min-h-screen overflow-hidden">
+          {/* Background video */}
+          <video
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay muted loop playsInline
+            src={BG_VIDEO}
+          />
+          <div className="absolute inset-0 bg-[#050c18]/45 z-0" />
 
 
 <div className="relative z-10 flex flex-col min-h-screen">
@@ -132,12 +154,12 @@ export default function App() {
           <div
             key={label}
             className="floating-chip absolute hidden lg:flex items-center gap-2 rounded-2xl
-                       px-3 py-2.5 bg-white/75 backdrop-blur-md border border-white/50 shadow-sm
+                       px-3 py-2.5 bg-slate-950/60 border border-white/10 backdrop-blur-md shadow-sm
                        pointer-events-none"
             style={style}
           >
-            <Icon size={13} strokeWidth={1.8} className="text-gray-500" />
-            <span className="text-[11px] font-medium text-gray-600 whitespace-nowrap">{label}</span>
+            <Icon size={13} strokeWidth={1.8} className="text-slate-400" />
+            <span className="text-[11px] font-medium text-slate-450 whitespace-nowrap">{label}</span>
           </div>
         ))}
 
@@ -151,79 +173,85 @@ export default function App() {
           {/* ── Mobile layout ── */}
           <div className="flex lg:hidden items-center justify-between">
             <div
-              className="flex items-center gap-2.5 rounded-full px-4 py-2.5"
-              style={{ backgroundColor: '#EDEDED' }}
+              className="flex items-center rounded-full px-4 py-2.5 border border-white/10 backdrop-blur-md"
+              style={{ backgroundColor: 'rgba(10, 20, 35, 0.55)' }}
             >
-              <Logo />
-              <div>
-                <p className="text-[12px] font-semibold text-gray-800 leading-none">i3 Labs</p>
-                <p className="text-[8px] font-medium text-gray-400 tracking-wider uppercase leading-none mt-[3px]">
-                  Innovations Unleashed
-                </p>
-              </div>
+              <Brand />
             </div>
-            <button
+            <motion.button
               onClick={() => setMenuOpen(v => !v)}
-              className="flex items-center justify-center w-10 h-10 rounded-full transition-colors"
-              style={{ backgroundColor: '#EDEDED' }}
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 transition-colors backdrop-blur-md"
+              style={{ backgroundColor: 'rgba(10, 20, 35, 0.55)' }}
             >
               {menuOpen
-                ? <X size={16} strokeWidth={2} className="text-gray-700" />
-                : <Menu size={16} strokeWidth={2} className="text-gray-700" />}
-            </button>
+                ? <X size={16} strokeWidth={2} className="text-slate-200" />
+                : <Menu size={16} strokeWidth={2} className="text-slate-200" />}
+            </motion.button>
           </div>
 
           {/* ── Desktop layout ── */}
-          <div className="hidden lg:flex items-center justify-center gap-2.5">
+          <motion.div
+            className="hidden lg:flex items-center justify-center gap-2.5"
+            variants={{ show: { transition: { staggerChildren: 0.05, delayChildren: 0.15 } } }}
+            initial="hide"
+            animate="show"
+          >
             {/* Logo + brand text pill */}
-            <div
-              className="flex items-center gap-2.5 rounded-full px-4 py-2.5 shrink-0"
-              style={{ backgroundColor: '#EDEDED' }}
+            <motion.div
+              variants={{ hide: { opacity: 0, y: -14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.5, ease }}
+              className="flex items-center rounded-full px-4 py-2.5 shrink-0 border border-white/10 backdrop-blur-md"
+              style={{ backgroundColor: 'rgba(10, 20, 35, 0.55)' }}
             >
-              <Logo />
-              <div>
-                <p className="text-[12px] font-semibold text-gray-800 leading-none">i3 Labs</p>
-                <p className="text-[8px] font-medium text-gray-400 tracking-wider uppercase leading-none mt-[3px]">
-                  Innovations Unleashed
-                </p>
-              </div>
-            </div>
+              <Brand />
+            </motion.div>
 
             {/* Nav links pill */}
-            <div
-              className="flex items-center gap-5 rounded-xl px-6 py-3 shrink-0"
-              style={{ backgroundColor: '#EDEDED' }}
+            <motion.div
+              variants={{ hide: { opacity: 0, y: -14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.5, ease }}
+              className="flex items-center gap-1 rounded-xl px-3 py-2.5 shrink-0 border border-white/10 backdrop-blur-md"
+              style={{ backgroundColor: 'rgba(10, 20, 35, 0.55)' }}
             >
               {navLinks.map(link => (
                 <a
                   key={link}
                   href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="text-[12px] font-medium text-gray-700 hover:text-gray-900
-                             transition-colors duration-200 whitespace-nowrap"
+                  className="group relative text-[12px] font-medium text-slate-300 hover:text-white
+                             transition-colors duration-200 whitespace-nowrap px-2.5 py-1.5 rounded-lg hover:bg-white/5"
                 >
                   {link}
+                  {/* Animated underline */}
+                  <span className="pointer-events-none absolute left-2.5 right-2.5 -bottom-px h-px bg-blue-400
+                                   origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
                 </a>
               ))}
-            </div>
+            </motion.div>
 
             {/* CTA pill */}
-            <a
+            <motion.a
               href="#contact"
+              variants={{ hide: { opacity: 0, y: -14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.5, ease }}
+              whileHover={{ scale: 1.05, boxShadow: '0 0 26px rgba(37,99,235,0.55)' }}
+              whileTap={{ scale: 0.96 }}
               className="shrink-0 flex items-center rounded-full px-5 py-3 text-[12px]
-                         font-medium text-white bg-blue-500 hover:bg-blue-600
-                         transition-colors duration-200 whitespace-nowrap"
+                         font-medium text-white bg-blue-600 hover:bg-blue-500
+                         shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-colors duration-200 whitespace-nowrap"
             >
               Partner With Us
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </motion.nav>
 
         {/* ── Mobile dropdown menu ───────────────────────────────────────────── */}
         <AnimatePresence>
           {menuOpen && (
             <motion.div
-              className="fixed top-20 inset-x-4 z-50 bg-white/95 backdrop-blur-xl
-                         rounded-2xl shadow-lg border border-gray-100 p-4 lg:hidden"
+              className="fixed top-20 inset-x-4 z-50 bg-slate-950/90 backdrop-blur-xl
+                         rounded-2xl shadow-2xl border border-white/10 p-4 lg:hidden"
               initial={{ opacity: 0, y: -10, scale: 0.97 }}
               animate={{ opacity: 1, y: 0,  scale: 1    }}
               exit={{    opacity: 0, y: -10, scale: 0.97 }}
@@ -235,8 +263,8 @@ export default function App() {
                     key={link}
                     href={`#${link.toLowerCase().replace(/\s+/g, '-')}`}
                     onClick={() => setMenuOpen(false)}
-                    className="text-[12.5px] font-medium text-gray-700 hover:text-gray-900
-                               py-2.5 px-3 rounded-xl hover:bg-gray-50 transition-colors text-center"
+                    className="text-[12.5px] font-medium text-slate-300 hover:text-white
+                               py-2.5 px-3 rounded-xl hover:bg-white/5 transition-colors text-center"
                   >
                     {link}
                   </a>
@@ -246,7 +274,7 @@ export default function App() {
                 href="#contact"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center justify-center rounded-full py-3 text-[13px]
-                           font-medium text-white bg-blue-500 hover:bg-blue-600 transition-colors"
+                           font-medium text-white bg-blue-600 hover:bg-blue-500 transition-colors"
               >
                 Partner With Us
               </a>
@@ -279,7 +307,7 @@ export default function App() {
                 <span key={i} className="overflow-hidden inline-block leading-[1.15]">
                   <span
                     className="word-inner inline-block"
-                    style={{ color: word === 'Builders' ? '#3b82f6' : '#111827' }}
+                    style={{ color: word === 'Builders' ? '#60a5fa' : '#ffffff' }}
                   >
                     {word}
                   </span>
@@ -289,7 +317,7 @@ export default function App() {
 
             {/* Subtitle */}
             <motion.p
-              className="text-[13px] sm:text-[14px] text-gray-500 leading-relaxed mb-7 max-w-[500px]"
+              className="text-[13px] sm:text-[14px] text-slate-400 leading-relaxed mb-7 max-w-[500px]"
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease, delay: 0.85 }}
             >
@@ -306,16 +334,16 @@ export default function App() {
               {stats.map((stat, i) => (
                 <div
                   key={stat.label}
-                  className={i > 0 ? 'border-l border-gray-300 pl-6 sm:pl-8 ml-6 sm:ml-8' : ''}
+                  className={i > 0 ? 'border-l border-white/10 pl-6 sm:pl-8 ml-6 sm:ml-8' : ''}
                 >
                   <span
                     ref={el => { statRefs.current[i] = el; }}
                     className="block text-[1.25rem] sm:text-[1.4rem] font-semibold
-                               text-gray-900 leading-none tabular-nums"
+                               text-white leading-none tabular-nums"
                   >
                     {stat.format(stat.from)}
                   </span>
-                  <span className="block text-[10px] sm:text-[11px] text-gray-400 mt-1">
+                  <span className="block text-[10px] sm:text-[11px] text-slate-400 mt-1">
                     {stat.label}
                   </span>
                 </div>
@@ -330,9 +358,9 @@ export default function App() {
             >
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 text-[13px] font-medium text-blue-500
-                           border border-blue-400 rounded-full px-5 py-2.5
-                           hover:bg-blue-500 hover:text-white hover:border-blue-500
+                className="inline-flex items-center gap-2 text-[13px] font-medium text-blue-400
+                           border border-blue-500/20 rounded-full px-5 py-2.5
+                           hover:bg-blue-600 hover:text-white hover:border-blue-600
                            transition-all duration-200 group"
               >
                 Partner With Us
@@ -341,7 +369,7 @@ export default function App() {
               <a
                 href="#services"
                 className="inline-flex items-center gap-1.5 text-[12.5px] font-medium
-                           text-gray-500 hover:text-gray-800 transition-colors duration-200 group"
+                           text-slate-400 hover:text-white transition-colors duration-200 group"
               >
                 Explore Programs
                 <span className="inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span>
@@ -357,14 +385,14 @@ export default function App() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 1.3 }}
         >
-          <span className="text-[10px] font-medium text-gray-400 tracking-widest uppercase mr-1">
+          <span className="text-[10px] font-medium text-slate-400 tracking-widest uppercase mr-1">
             Aligned with
           </span>
           {curricula.map(c => (
             <span
               key={c}
-              className="rounded-full px-3 py-1.5 text-[11px] font-medium text-gray-600 leading-none"
-              style={{ backgroundColor: '#EDEDED' }}
+              className="rounded-full px-3 py-1.5 text-[11px] font-medium text-slate-300 leading-none border border-white/5"
+              style={{ backgroundColor: 'rgba(255,255,255,0.04)' }}
             >
               {c}
             </span>
@@ -377,24 +405,28 @@ export default function App() {
           animate={{ y: [0, 7, 0] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown size={17} strokeWidth={1.5} className="text-gray-400" />
+          <ChevronDown size={17} strokeWidth={1.5} className="text-slate-400" />
         </motion.div>
 
-      </div>
-    </div>
+          </div>
+        </div>
 
-    {/* ── Page sections ──────────────────────────────────────────────────── */}
-    <About />
-    <Services />
-    <Benefits />
-    <Curriculum />
-    <WhyPartner />
-    <ThreeIPP />
-    <Engagement />
-    <Activities />
-    <Clients />
-    <Team />
-    <Contact />
+        {/* ── Page sections ──────────────────────────────────────────────────── */}
+        <div className="relative z-10">
+          <About />
+          <Services />
+          <Benefits />
+          <Curriculum />
+          <VideoTour />
+          <WhyPartner />
+          <ThreeIPP />
+          <Engagement />
+          <Activities />
+          <Clients />
+          <Team />
+          <Contact />
+        </div>
+      </div>
     </div>
   );
 }

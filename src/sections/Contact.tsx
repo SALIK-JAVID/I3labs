@@ -71,7 +71,7 @@ export const Contact: React.FC = () => {
           Get In Touch
         </h2>
         <p className="text-3xl md:text-5xl font-extrabold text-white font-heading leading-tight">
-          Partner With Us
+          Let's Build the Future Together
         </p>
         <div className="w-16 h-1 bg-brand-orange mx-auto mt-4 rounded-full"></div>
       </div>
@@ -364,6 +364,21 @@ export const Contact: React.FC = () => {
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
           </div>
+        </div>
+
+        {/* Attribution */}
+        <div className="max-w-7xl mx-auto px-4 md:px-8 mt-6 text-center">
+          <p className="text-[11px] text-slate-500">
+            Designed &amp; Developed by{' '}
+            <a
+              href="https://www.salikjavid.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-slate-400 hover:text-brand-orange transition-colors underline-offset-2 hover:underline"
+            >
+              Salik Javid
+            </a>
+          </p>
         </div>
       </footer>
 

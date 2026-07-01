@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { Menu, X, Cpu } from 'lucide-react';
 
 const navLinks = [
@@ -16,18 +16,34 @@ const navLinks = [
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [activeLink, setActiveLink] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const lastScrollY = useRef(0);
+
+  // Smooth scroll-progress bar (0 → 1 across the whole page)
+  const { scrollYProgress } = useScroll();
+  const progressScaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.3 });
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      const y = window.scrollY;
+      setIsScrolled(y > 30);
+
+      // Auto-hide on scroll-down, reveal on scroll-up (ignore tiny jitters + top of page)
+      const delta = y - lastScrollY.current;
+      if (y < 120 || isMobileMenuOpen) {
+        setIsHidden(false);
+      } else if (Math.abs(delta) > 6) {
+        setIsHidden(delta > 0);
+      }
+      lastScrollY.current = y;
 
       // Simple active link calculation based on scroll offset
-      const scrollPosition = window.scrollY + 160;
-      
+      const scrollPosition = y + 160;
+
       // Special case: bottom of the page highlights Contact
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+      if (window.innerHeight + y >= document.documentElement.scrollHeight - 100) {
         setActiveLink('contact');
         return;
       }
@@ -46,11 +62,11 @@ export const Navbar: React.FC = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     // Trigger once on mount
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMobileMenuOpen]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -73,7 +89,12 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${isScrolled ? 'py-3 bg-brand-darkBg/85 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/10' : 'py-5 bg-transparent'}`}>
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: isHidden ? -100 : 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className={`fixed top-0 left-0 right-0 z-40 transition-[background-color,padding,box-shadow] duration-300 ${isScrolled ? 'py-3 bg-brand-darkBg/85 backdrop-blur-md border-b border-white/5 shadow-lg shadow-black/10' : 'py-5 bg-transparent'}`}
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
         
         {/* Logo */}
@@ -176,6 +197,12 @@ export const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+
+      {/* Scroll progress bar */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-orange origin-left"
+        style={{ scaleX: progressScaleX, opacity: isScrolled ? 1 : 0 }}
+      />
+    </motion.nav>
   );
 };
