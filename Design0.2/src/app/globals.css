@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens — palette taken from sitesyncai.com
+ * paper / sheet / ink scale / hairlines / signal orange / deep "blueprint" dark.
+ */
+@theme {
+  --color-paper: #f6f5f2;
+  --color-sheet: #ffffff;
+  --color-fill: #f4f0ea;
+  --color-div: #f0ede9;
+
+  --color-ink: #1a1613;
+  --color-ink-2: #5c5550;
+  --color-ink-3: #6e6964;
+  --color-ink-4: #a8a29b;
+
+  --color-line: #e5e1dc;
+  --color-line-2: #d8d2ca;
+
+  --color-or: #f47820;
+  --color-or-ink: #a34a08;
+  --color-or-300: #f8a05a;
+  --color-or-100: #fbc08d;
+  --color-or-50: #fff7f0;
+
+  --color-iris: #4f46e5;
+  --color-iris-300: #98a3f6;
+
+  --color-night: #12100f;
+  --color-night-2: #1c1917;
+  --color-night-ink: #f2f0ec;
+  --color-night-mute: #b3aca4;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --shadow-rest: 0 1px 2px rgba(26, 22, 19, 0.05);
+  --shadow-card: 0 1px 2px rgba(26, 22, 19, 0.05), 0 12px 32px -12px rgba(26, 22, 19, 0.12);
+  --shadow-win: 0 4px 10px rgba(26, 22, 19, 0.08), 0 24px 48px -16px rgba(26, 22, 19, 0.24);
+  --shadow-glow: 0 10px 30px -8px rgba(244, 120, 32, 0.55);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-site: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+  --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
+  --animate-wa-pulse: wa-pulse 2.6s ease-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes wa-pulse {
+    0% { transform: scale(1); opacity: 0.55; }
+    70%, 100% { transform: scale(1.22, 1.45); opacity: 0; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(244, 120, 32, 0.45); }
+    50% { box-shadow: 0 0 0 7px rgba(244, 120, 32, 0); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  ::selection {
+    background: var(--color-or);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-or);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-10;
+  }
+  .section {
+    padding-block: clamp(64px, 8vw, 128px);
+  }
+  /* Small-caps label system — Inter, 11–12px, moderate tracking. Mono is reserved for numbers. */
+  .eyebrow {
+    @apply font-sans text-[12px] font-semibold uppercase text-or-ink;
+    letter-spacing: 0.12em;
+  }
+  .label {
+    @apply font-sans text-[12px] font-medium uppercase text-ink-3;
+    letter-spacing: 0.1em;
+  }
+  /* Chips that sit on photos and cards */
+  .tag {
+    @apply font-sans text-[11px] font-semibold uppercase;
+    letter-spacing: 0.08em;
+  }
+  /* Step / index numbers: 01, 02 … */
+  .num {
+    @apply font-mono text-[12px] font-medium;
+  }
+  .card {
+    @apply rounded-2xl border border-line bg-sheet;
+    box-shadow: var(--shadow-rest);
+  }
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, rgba(26, 22, 19, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(26, 22, 19, 0.055) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .hairline-grid-dark {
+    background-image:
+      linear-gradient(to right, rgba(242, 240, 236, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(242, 240, 236, 0.06) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .mask-fade-x {
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
